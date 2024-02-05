@@ -14,6 +14,9 @@ import 'package:saverp_app/models/transaksi.dart';
 import 'package:saverp_app/models/widget.dart';
 import 'package:saverp_app/views/CRUD/inputTransaksi.dart';
 
+// import 'package:searchbar_animation/searchbar_animation.dart';
+import 'package:animated_search_bar/animated_search_bar.dart';
+
 class TransaksiPage extends StatelessWidget {
   const TransaksiPage({Key? key}) : super(key: key);
 
@@ -268,6 +271,16 @@ class TransactionsContainerState extends State<TransactionsContainer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 8, top: 12),
+                child: AnimatedSearchBar(
+                  label: 'Search transactions',
+                  onChanged: (value) {
+                    print(value);
+                    context.read<TransactionBloc>().add(SearchTransactions(query: value));
+                  },
+                ),
+              ),
               Container(
                   margin: const EdgeInsets.only(bottom: 8, top: 12),
                   child: Row(

@@ -40,3 +40,12 @@ class DeleteTransaction extends TransactionEvent {
   @override
   List<Object?> get props => [transaction];
 }
+
+class SearchTransactions extends TransactionEvent {
+  final String query;
+
+  const SearchTransactions({required this.query});
+
+  @override
+  List<Object?> get props => [query];
+}

@@ -22,6 +22,8 @@ class TransactionLoaded extends TransactionState {
   bool get stringify => true;
 }
 
+
+
 class TransactionUpdated extends TransactionState {
   final List<Transaction> updatedTransaction;
   final DateTime lastUpdated;

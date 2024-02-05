@@ -201,12 +201,12 @@ class _ExportImportState extends State<ExportImport> {
         final header = lines[0].replaceAll(';', ',').split(',');
 
         List<Map> listOfMap = [];
-
         for (var i = 1; i < lines.length; i++) {
           final values = lines[i].replaceAll(';', ',').split(',');
           var map = {};
           for (var j = 0; j < header.length; j++) {
-            map[header[j]] = values[j];
+            // Check for null values before adding them to the map
+            map[header[j]] = (j < values.length) ? values[j] : null;
           }
 
           if (map['kategori'] != null &&
@@ -216,7 +216,6 @@ class _ExportImportState extends State<ExportImport> {
             listOfMap.add(map);
           }
         }
-
         try {
           // Expense
           final List<ExpenseCategory> expenseCategories =
@@ -235,14 +234,22 @@ class _ExportImportState extends State<ExportImport> {
 
             // If category exists
             if (expenseCategory != null) {
-              _addTransactionDB(expenseCategory, DateTime.parse(map['tanggal']),
-                  double.parse(map['jumlahTransaksi']), map['deskripsi']);
+              _addTransactionDB(
+                expenseCategory,
+                DateTime.parse(map['tanggal']),
+                double.parse(map['jumlahTransaksi']),
+                map['deskripsi'],
+              );
             } else {
               ExpenseCategory newCategory =
-                  ExpenseCategory(id: 0, name: map['nama']);
+                  ExpenseCategory(id: 0, name: map['kategori']);
               _insertExpenseCategory(newCategory, (newCategory) {
-                _addTransactionDB(newCategory, DateTime.parse(map['tanggal']),
-                    double.parse(map['jumlahTransaksi']), map['deskripsi']);
+                _addTransactionDB(
+                  newCategory,
+                  DateTime.parse(map['tanggal']),
+                  double.parse(map['jumlahTransaksi']),
+                  map['deskripsi'],
+                );
               });
             }
           }
@@ -263,27 +270,43 @@ class _ExportImportState extends State<ExportImport> {
 
             // If category exists
             if (incomeCategory != null) {
-              _addTransactionDB(incomeCategory, DateTime.parse(map['tanggal']),
-                  double.parse(map['jumlahTransaksi']), map['deskripsi']);
+              _addTransactionDB(
+                incomeCategory,
+                DateTime.parse(map['tanggal']),
+                double.parse(map['jumlahTransaksi']),
+                map['deskripsi'],
+              );
             } else {
               IncomeCategory newCategory =
-                  IncomeCategory(id: 0, name: map['nama']);
+                  IncomeCategory(id: 0, name: map['kategori']);
 
               _insertIncomeCategory(newCategory, (newCategory) {
-                _addTransactionDB(newCategory, DateTime.parse(map['tanggal']),
-                    double.parse(map['jumlahTransaksi']), map['deskripsi']);
+                _addTransactionDB(
+                  newCategory,
+                  DateTime.parse(map['tanggal']),
+                  double.parse(map['jumlahTransaksi']),
+                  map['deskripsi'],
+                );
               });
             }
           }
 
           // Show notification
           if (context.mounted) {
-            _showPopup(context, 'Import Success', 'Transaction data imported');
+            _showPopup(
+              context,
+              'Import Success',
+              'Transaction data imported',
+            );
           }
         } catch (e) {
+          print(e);
           if (context.mounted) {
             _showPopup(
-                context, 'Import Failed', 'Transaction data import failed');
+              context,
+              'Import Failed',
+              'Transaction data import failed',
+            );
           }
         }
       }

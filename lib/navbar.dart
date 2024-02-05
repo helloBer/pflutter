@@ -38,6 +38,7 @@ class NavbarsaveRPState extends State<NavbarsaveRP> {
 
   @override
   Widget build(BuildContext context) {
+    print(_currentIndex);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(child: _children[_currentIndex]),
